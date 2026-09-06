@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24"
+    android:background="#FF121212">
+
+    <TextView
+        android:id="@+id/titleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Samsung Display Controller"
+        android:textSize="24"
+        android:textColor="#FFFFFFFF"
+        android:textStyle="bold"
+        android:paddingBottom="8" />
+
+    <TextView
+        android:id="@+id/subtitleText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="mDNIe color profile manager"
+        android:textSize="14"
+        android:textColor="#FFB0B0B0"
+        android:paddingBottom="24" />
+
+    <TextView
+        android:id="@+id/statusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Checking root..."
+        android:textSize="14"
+        android:textColor="#FF4CAF50"
+        android:paddingBottom="16" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </ScrollView>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Changes apply instantly via mDNIe sysfs"
+        android:textSize="12"
+        android:textColor="#FF666666"
+        android:paddingTop="16"
+        android:gravity="center" />
+
+</LinearLayout>
