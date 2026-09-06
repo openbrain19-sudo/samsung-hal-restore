@@ -1,80 +1,105 @@
-# Samsung Display Settings
+# Samsung HAL Restore
 
-Standalone app and scripts for controlling Samsung mDNIe display modes on LineageOS.
+Restoring Samsung vendor HAL features on custom ROMs.
 
-## What This Does
+## The Problem
 
-Lets you switch between Samsung's 5 color profiles on custom ROMs without needing ADB or a computer.
+Samsung Exynos devices running LineageOS and other custom ROMs lose access to Samsung-specific hardware features. The common assumption is that these features "don't work" on custom ROMs. **This is wrong.** The vendor HAL is still there. The vendor keys are still accessible. Nobody just tried.
 
-## Options
+## What This Project Does
 
-### 1. Android App (Recommended)
+Proves that Samsung vendor features work on custom ROMs and builds tools to access them.
 
-Install the APK, open it, grant root when prompted. Pick a mode, done.
+## What's Working
 
-- Clean UI with all 5 modes
-- Changes apply instantly
-- No Magisk module needed — just root access
+### Camera Vendor Keys
+All Samsung-specific camera2 vendor tags (beauty mode, HDR, scene optimization, etc.) work on custom ROMs. See [UltraCam-Aperture](https://github.com/openbrain19-sudo/UltraCam-Aperture) for the camera app.
 
-**Requirements:**
-- Android 9+ (API 28+)
-- Root access (enable in Developer Options, or install Magisk/APatch)
+### Display (mDNIe)
+Full control of Samsung's display processing engine via sysfs:
 
-### 2. Shell Script
+| Feature | Status | Details |
+|---------|--------|---------|
+| Color Profiles | Working | Dynamic, Standard, Natural, Movie, Auto |
+| HDR Processing | Working | 3 HDR modes via mDNIe |
+| Eye Comfort Shield | Working | Blue light filter with adjustable intensity |
+| Bypass Mode | Working | Disable mDNIe entirely |
 
-For people who prefer terminal. Push the script to your phone and run it.
+See [display/adaptive-tuning](display/adaptive-tuning/) for scripts and details.
 
+### VoLTE
+Phone calls on Samsung Exynos when carriers shut down 2G/3G. See [voLTE-exynos](https://github.com/openbrain19-sudo/voLTE-exynos).
+
+## What's Planned
+
+- **Dolby Atmos tuning** — Samsung's customized Dolby implementation
+- **UHQ Upscaler** — Proprietary DSP for wired headphone audio
+- **Haptics** — Advanced vibration engine control
+
+## Quick Start
+
+### Android App (Recommended)
+Install the APK, grant root when prompted. Pick a mode, done.
+
+```bash
+# Build the app
+./gradlew assembleDebug
+
+# APK at: app/build/outputs/apk/debug/app-debug.apk
+```
+
+### Shell Script
 ```bash
 # Push to phone
 adb push mdnie-controller.sh /sdcard/
 
-# Run interactively
+# Interactive mode
 adb shell su -c "sh /sdcard/mdnie-controller.sh"
 
-# Or set mode directly
-adb shell su -c "sh /sdcard/mdnie-controller.sh 3"
+# Direct commands
+adb shell su -c "sh /sdcard/mdnie-controller.sh mode 3"
+adb shell su -c "sh /sdcard/mdnie-controller.sh hdr 1"
+adb shell su -c "sh /sdcard/mdnie-controller.sh night 1 10"
 ```
 
-### 3. Direct ADB Commands
-
+### Direct ADB
 ```bash
-# Check current mode
+# Check status
 adb shell su -c "cat /sys/class/mdnie/mdnie/mdnie"
 
-# Set mode (0-4)
+# Set display mode (0-4)
 adb shell su -c "echo 3 > /sys/class/mdnie/mdnie/mode"
-```
 
-## Display Modes
+# Set HDR (0-3)
+adb shell su -c "echo 1 > /sys/class/mdnie/mdnie/hdr"
 
-| Value | Mode | Description |
-|-------|------|-------------|
-| 0 | Dynamic | Maximum saturation and contrast |
-| 1 | Standard | sRGB color accurate |
-| 2 | Natural | Balanced, adaptive |
-| 3 | Movie | DCI-P3, warm, cinematic |
-| 4 | Auto | Samsung adaptive algorithm |
-
-## Building the App
-
-```bash
-# Requires Android SDK and Kotlin
-./gradlew assembleDebug
-
-# APK will be at:
-# app/build/outputs/apk/debug/app-debug.apk
+# Set eye comfort (format: "on level")
+adb shell su -c "echo 1 10 > /sys/class/mdnie/mdnie/night_mode"
 ```
 
 ## How It Works
 
-Samsung's mDNIe (mobile Digital Natural Image engine) is a hardware display processor that applies color transformations. The control interface is at `/sys/class/mdnie/mdnie/mode`. This file is owned by `system:system` but SELinux prevents non-root apps from writing to it.
+Samsung's vendor HAL lives on the vendor partition. When you flash a custom ROM, the vendor partition stays. The HAL blobs are still there. The vendor keys are still accessible through standard Android HAL interfaces (Camera2, Display, Audio, etc.).
 
-Root access allows the app/script to write directly to the sysfs file, changing the display mode instantly.
+The features don't "not work" — they just haven't been hooked up. This project hooks them up.
+
+## Device Support
+
+- Samsung Galaxy S20 Ultra (SM-G988B) — Exynos 990, codename z3s
+- Likely works on other Exynos 990 devices (S20/S20+/Note 20 series)
+
+## Requirements
+
+- Root access (APatch, Magisk, or enable in Developer Options)
+- ADB for scripts (not needed for the app)
 
 ## Credits
 
-- komori — Discovery, testing, and implementation
+- **komori** — Discovery, testing, and implementation
+- **ExtremeXT** — LineageOS for Exynos 990, kernel source
+- **tdrkDev** — Samsung camera framework reverse engineering
+- **illusion0001** — SamsungCamera research and APK samples
 
 ## License
 
-CC-BY-NC-SA-4.0
+CC-BY-NC-SA-4.0 — Use it, fork it, edit it. No selling. If you make it public, credit komori. If you make a derivative, it must be open source under the same license.

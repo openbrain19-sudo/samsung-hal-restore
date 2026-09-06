@@ -3,47 +3,146 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="24"
+    android:padding="20"
     android:background="#FF121212">
 
     <TextView
-        android:id="@+id/titleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Samsung Display Controller"
-        android:textSize="24"
+        android:textSize="22"
         android:textColor="#FFFFFFFF"
         android:textStyle="bold"
-        android:paddingBottom="8" />
+        android:paddingBottom="4" />
 
     <TextView
-        android:id="@+id/subtitleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="mDNIe color profile manager"
-        android:textSize="14"
-        android:textColor="#FFB0B0B0"
-        android:paddingBottom="24" />
+        android:text="mDNIe color profile, HDR, and eye comfort"
+        android:textSize="12"
+        android:textColor="#FF888888"
+        android:paddingBottom="12" />
 
     <TextView
         android:id="@+id/statusText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Checking root..."
-        android:textSize="14"
+        android:textSize="13"
         android:textColor="#FF4CAF50"
-        android:paddingBottom="16" />
+        android:paddingBottom="12" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <RadioGroup
-            android:id="@+id/radioGroup"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+
+            <!-- Display Mode Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="DISPLAY MODE"
+                android:textSize="11"
+                android:textColor="#FF666666"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:paddingBottom="8" />
+
+            <RadioGroup
+                android:id="@+id/modeGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16" />
+
+            <!-- HDR Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="HDR PROCESSING"
+                android:textSize="11"
+                android:textColor="#FF666666"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:paddingBottom="8" />
+
+            <RadioGroup
+                android:id="@+id/hdrGroup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="16" />
+
+            <!-- Eye Comfort Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="EYE COMFORT SHIELD"
+                android:textSize="11"
+                android:textColor="#FF666666"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:paddingBottom="4" />
+
+            <TextView
+                android:id="@+id/nightLevelText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Eye Comfort: Off"
+                android:textSize="14"
+                android:textColor="#FFFFFFFF"
+                android:paddingBottom="4" />
+
+            <SeekBar
+                android:id="@+id/nightSeekBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="20"
+                android:progress="0"
+                android:paddingBottom="16" />
+
+            <!-- Bypass Section -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="OPTIONS"
+                android:textSize="11"
+                android:textColor="#FF666666"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:paddingBottom="8" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/bypassText"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Bypass: Off"
+                    android:textSize="14"
+                    android:textColor="#FFFFFFFF" />
+
+                <Button
+                    android:id="@+id/bypassButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:text="Toggle"
+                    android:textSize="12"
+                    android:textAllCaps="false" />
+
+            </LinearLayout>
+
+        </LinearLayout>
 
     </ScrollView>
 
@@ -51,9 +150,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Changes apply instantly via mDNIe sysfs"
-        android:textSize="12"
-        android:textColor="#FF666666"
-        android:paddingTop="16"
+        android:textSize="11"
+        android:textColor="#FF555555"
+        android:paddingTop="8"
         android:gravity="center" />
 
 </LinearLayout>
