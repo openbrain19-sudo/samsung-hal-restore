@@ -46,4 +46,4 @@ The features don't "not work" — they just haven't been hooked up. This project
 
 ## License
 
-MIT
+CC-BY-NC-SA-4.0 — Use it, fork it, edit it. No selling. If you make it public, credit komori. If you make a derivative, it must be open source under the same license.
