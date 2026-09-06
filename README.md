@@ -30,11 +30,20 @@ See [display/adaptive-tuning](display/adaptive-tuning/) for scripts and details.
 ### VoLTE
 Phone calls on Samsung Exynos when carriers shut down 2G/3G. See [voLTE-exynos](https://github.com/openbrain19-sudo/voLTE-exynos).
 
+## What's In Progress
+
+### Audio HAL
+Samsung's audio HAL (`audio.primary.universal990.so`) is present on vendor partition. Dolby config (`dax-default.xml`) exists. Samsung's custom audio processing is not utilized on custom ROMs. See [audio/](audio/).
+
+### Haptics
+Samsung's haptic engine sysfs interface exists at `/sys/devices/virtual/timed_output/vibrator/haptic_engine`. Basic vibrator works, advanced patterns not hooked up. See [haptics/](haptics/).
+
 ## What's Planned
 
-- **Dolby Atmos tuning** — Samsung's customized Dolby implementation
+- **Samsung DeX** — Desktop mode when plugging into a monitor
+- **Dolby Atmos Samsung profiles** — Custom Dolby tuning
 - **UHQ Upscaler** — Proprietary DSP for wired headphone audio
-- **Haptics** — Advanced vibration engine control
+- **Advanced haptics** — Samsung's custom vibration patterns
 
 ## Quick Start
 
