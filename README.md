@@ -14,14 +14,17 @@ Proves that Samsung vendor features work on custom ROMs and builds tools to acce
 
 - **Camera vendor keys** — All Samsung-specific camera2 vendor tags (beauty mode, HDR, scene optimization, etc.) work on custom ROMs. See [UltraCam](https://github.com/openbrain19-sudo/UltraCam) for the camera app that proves this.
 
+### Proven (display)
+
+- **Adaptive display tuning** — Samsung's mDNIe color profiles work on LineageOS. The sysfs interface at `/sys/class/mdnie/mdnie/mode` controls display modes directly. 5 profiles: Dynamic, Standard, Natural, Movie, Auto. See [display/adaptive-tuning](display/adaptive-tuning/) for scripts and details.
+
 ### In Progress
 
-- **Adaptive display tuning** — Samsung's color profiles (Natural/Vivid/Adaptive) are vendor-specific. The display HAL supports it, just needs the right metadata written.
+- **HDR10+ tone mapping** — mDNIe has an `hdr` sysfs entry. Need to map the values and enable HDR processing.
 
 ### Planned
 
-- **HDR10+ tone mapping** — Samsung's HDR10+ metadata and display pipeline. Hardware supports it, pipeline is skipped on custom ROMs.
-- **Eye Comfort Shield** — Samsung's adaptive blue light filter. Smarter than the generic Android implementation.
+- **Eye Comfort Shield** — Samsung's adaptive blue light filter. The mDNIe has a `night_mode` sysfs entry. Need to map values and enable it.
 - **Dolby Atmos tuning** — Samsung's customized Dolby implementation on Exynos. Generic Dolby misses a lot of the Samsung-specific tuning.
 - **UHQ Upscaler** — Samsung's proprietary DSP for wired headphone audio upsampling. Driver is there, interface needs reverse engineering.
 - **Haptics** — Samsung's advanced vibration engine with custom patterns and intensities.
