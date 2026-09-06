@@ -1,0 +1,15 @@
+# Build outputs
+*.apk
+*.jar
+*.class
+build/
+.gradle/
+local.properties
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
