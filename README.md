@@ -20,12 +20,14 @@ Full control of Samsung's display processing engine via sysfs:
 
 | Feature | Status | Details |
 |---------|--------|---------|
-| Color Profiles | Working | Dynamic, Standard, Natural, Movie, Auto |
-| HDR Processing | Working | 3 HDR modes via mDNIe |
-| Eye Comfort Shield | Working | Blue light filter with adjustable intensity |
-| Bypass Mode | Working | Disable mDNIe entirely |
+| Color Profiles | **PROVEN** | Dynamic, Standard, Natural, Movie, Auto |
+| HDR Processing | **PROVEN** | 3 HDR modes via mDNIe |
+| Eye Comfort Shield | **PROVEN** | Blue light filter with adjustable intensity |
+| Bypass Mode | **PROVEN** | Disable mDNIe entirely |
+| Forced 120Hz | **UNTESTED** | Force 120Hz on all apps |
+| Desktop Mode | **UNTESTED** | Freeform windows + external display desktop |
 
-See [display/adaptive-tuning](display/adaptive-tuning/) for scripts and details.
+See [display/adaptive-tuning](display/adaptive-tuning/) for proven features.
 
 ### VoLTE
 Phone calls on Samsung Exynos when carriers shut down 2G/3G. See [voLTE-exynos](https://github.com/openbrain19-sudo/voLTE-exynos).
