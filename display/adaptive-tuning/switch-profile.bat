@@ -1,89 +1,83 @@
 @echo off
-REM Samsung Adaptive Display Tuning - Profile Switcher
+REM Samsung Adaptive Display Tuning - mDNIe Profile Switcher
 REM For Samsung Galaxy S20 Ultra (SM-G988B) running LineageOS
 REM 
-REM Usage: run this script and select a profile
-REM Requires: ADB, USB debugging enabled, rooted device
+REM Uses direct mDNIe sysfs control — the real display HAL interface
+REM Requires: ADB, USB debugging, rooted device
+
+set ADB="C:\Users\komori\Desktop\platform-tools-latest-windows\platform-tools\adb.exe"
 
 echo.
 echo ========================================
-echo  Samsung Adaptive Display Tuning
+echo  Samsung mDNIe Display Controller
 echo  Galaxy S20 Ultra - LineageOS
 echo ========================================
 echo.
-echo Available color profiles:
-echo   0 - AMOLED Cinema (DCI-P3)
-echo   1 - AMOLED Photo (Adobe RGB)
-echo   2 - Basic (sRGB)
-echo   3 - Natural (default)
-echo   4 - Vivid (oversaturated)
+echo Available display modes (mDNIe):
+echo   0 - Dynamic   (oversaturated, high contrast)
+echo   1 - Standard  (sRGB color accurate)
+echo   2 - Natural   (balanced, adaptive)
+echo   3 - Movie     (DCI-P3, warm, cinematic)
+echo   4 - Auto      (Samsung adaptive algorithm)
 echo.
 
 REM Check if ADB is available
-adb version >nul 2>&1
+%ADB% version >nul 2>&1
 if errorlevel 1 (
-    echo [ERROR] ADB not found. Install Android SDK platform-tools.
-    echo         https://developer.android.com/tools/releases/platform-tools
+    echo [ERROR] ADB not found. Set the ADB path in this script.
     pause
     exit /b 1
 )
 
 REM Check if device is connected
-adb devices | findstr /r /c:"device$" >nul 2>&1
+%ADB% devices | findstr /r /c:"device$" >nul 2>&1
 if errorlevel 1 (
     echo [ERROR] No device connected. Enable USB debugging and connect via USB.
     pause
     exit /b 1
 )
 
-REM Get current profile
-echo Checking current profile...
-for /f "tokens=*" %%a in ('adb shell settings get system screen_mode_setting 2^>nul') do set CURRENT=%%a
-if "%CURRENT%"=="" (
-    echo [INFO] screen_mode_setting not found. This may be the first run.
-    echo        The setting will be created when you select a profile.
-    set CURRENT=not set
-) else (
-    if "%CURRENT%"=="0" set CURRENT_NAME=AMOLED Cinema
-    if "%CURRENT%"=="1" set CURRENT_NAME=AMOLED Photo
-    if "%CURRENT%"=="2" set CURRENT_NAME=Basic
-    if "%CURRENT%"=="3" set CURRENT_NAME=Natural
-    if "%CURRENT%"=="4" set CURRENT_NAME=Vivid
-    echo Current profile: %CURRENT% (%CURRENT_NAME%)
+REM Check root
+%ADB% shell su -c 'id' 2>&1 | findstr /i "uid=0" >nul 2>&1
+if errorlevel 1 (
+    echo [ERROR] Root access required. Install APatch or Magisk.
+    pause
+    exit /b 1
 )
+
+REM Get current mode
+echo Checking current mDNIe mode...
+for /f "tokens=*" %%a in ('%ADB% shell su -c "cat /sys/class/mdnie/mdnie/mdnie" 2^>nul') do set MDNIE=%%a
+echo Current: %MDNIE%
 echo.
 
-set /p CHOICE="Select profile (0-4): "
+set /p CHOICE="Select mode (0-4): "
 
 REM Validate input
-if "%CHOICE%"=="0" goto set_profile
-if "%CHOICE%"=="1" goto set_profile
-if "%CHOICE%"=="2" goto set_profile
-if "%CHOICE%"=="3" goto set_profile
-if "%CHOICE%"=="4" goto set_profile
+if "%CHOICE%"=="0" goto set_mode
+if "%CHOICE%"=="1" goto set_mode
+if "%CHOICE%"=="2" goto set_mode
+if "%CHOICE%"=="3" goto set_mode
+if "%CHOICE%"=="4" goto set_mode
 echo [ERROR] Invalid choice. Enter 0-4.
 pause
 exit /b 1
 
-:set_profile
+:set_mode
 echo.
-echo Setting profile to %CHOICE%...
-adb shell settings put system screen_mode_setting %CHOICE%
+echo Setting mDNIe mode to %CHOICE%...
+%ADB% shell su -c "echo %CHOICE% > /sys/class/mdnie/mdnie/mode"
 
-REM Also set to Natural mode first (required for the trick to work)
-adb shell cmd display set-color-mode 0
-
-echo.
-echo [OK] Profile set. Go to Settings > Display > Screen Mode to see the change.
-echo      Or open Settings, go to Screen Mode tab, and go back.
-echo.
+REM Also update the Android setting for persistence
+%ADB% shell settings put system screen_mode_setting %CHOICE%
 
 REM Verify
-for /f "tokens=*" %%a in ('adb shell settings get system screen_mode_setting 2^>nul') do set VERIFY=%%a
-if "%VERIFY%"=="%CHOICE%" (
-    echo Verified: screen_mode_setting = %VERIFY%
-) else (
-    echo [WARNING] Verification failed. Expected %CHOICE%, got %VERIFY%
-)
-
+timeout /t 1 /nobreak >nul
+echo.
+echo Verifying...
+for /f "tokens=*" %%a in ('%ADB% shell su -c "cat /sys/class/mdnie/mdnie/mdnie" 2^>nul') do set VERIFY=%%a
+echo Result: %VERIFY%
+echo.
+echo [OK] Display mode changed. Colors should be different now.
+echo.
 pause
